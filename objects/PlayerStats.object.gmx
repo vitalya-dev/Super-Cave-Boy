@@ -31,9 +31,74 @@ display_set_gui_size(view_wview[0], view_hview[0])
 
 // Initialize some variables
 
-hp = 2;
+hp = 3;
 maxhp = 3;
+sapphires = 0
+score = 0
+highscore = 0
+time = 0
 
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="3" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// To start the game
+
+var start = keyboard_check_pressed(vk_space)
+
+if (start == true &amp;&amp; room = m_menu) {
+    room_goto(m_one)
+}
+
+// Collect time
+time += 1
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="7" enumb="2">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Play the background music
+
+// Create an audio emitter
+audio_em = audio_emitter_create()
+audio_emitter_gain(audio_em, .1)
+audio_play_sound_on(audio_em, snd_music, true, 10)
 
 </string>
           </argument>
@@ -58,16 +123,50 @@ maxhp = 3;
           <argument>
             <kind>1</kind>
             <string>/// Draw the stats
-
-// Draw the heart spaces
-for (var i = 0; i &lt; maxhp; i++) {
-    draw_sprite_ext(spr_heart, 0, 24 + i*36, 20, 1, 1, 0, c_black, 0.5);
-}
-
-
-// Draw the hearts
-for (var i = 0; i &lt; hp; i++) {
-    draw_sprite_ext(spr_heart, 0, 24 + i*36, 20, 1, 1, 0, c_white, 1);
+switch (room) {
+    case m_menu:
+        draw_set_halign(fa_center)
+        draw_set_font(fnt_title)
+        draw_text_colour(room_width/2+4, 32+6, "Super Cave Boy", c_black, c_black, c_black, c_black, 1)
+        draw_text_colour(room_width/2, 32, "Super Cave Boy", c_white, c_white, c_white, c_white, 1)
+        
+        var str
+        if (gamepad_is_connected(0)) {
+            str = "Press [Start] to play"
+        } else {
+            str = "Press [Space] to play"
+        }
+        
+        draw_set_font(fnt_start)
+        draw_text_colour(room_width/2+4, room_height-44, str, c_black, c_black, c_black, c_black, 1)
+        draw_text_colour(room_width/2, room_height-48, str, c_ltgray, c_ltgray, c_ltgray, c_ltgray, 1)
+        
+        break
+    default:
+        // Draw the heart spaces
+        for (var i = 0; i &lt; maxhp; i++) {
+            draw_sprite_ext(spr_heart, 0, 24 + i*36, 20, 1, 1, 0, c_black, 0.5);
+        }
+        
+        
+        // Draw the hearts
+        for (var i = 0; i &lt; hp; i++) {
+            draw_sprite_ext(spr_heart, 0, 24 + i*36, 20, 1, 1, 0, c_white, 1);
+        }
+        
+        // Draw the sapphires
+        draw_set_halign(fa_right)
+        draw_set_font(fnt_start)
+        var str = "x"+string(sapphires)
+        draw_text_colour(view_wview[0]-16, 8, str, c_white, c_white, c_white, c_white, 1)
+        
+        var text_width = string_width(str)
+        draw_sprite(spr_sapphire_gui, 0, view_wview[0] - 32 - text_width, 22)
+        
+        // Draw the timer
+        draw_text_colour(view_wview[0]/2, 8, string(floor(time / room_speed)), c_white, c_white, c_white, c_white, 1)
+        
+        break
 }
 </string>
           </argument>

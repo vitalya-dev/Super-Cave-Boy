@@ -6,7 +6,7 @@ else {
     if (room != room_last) {
         room_goto_next()
     } else {
-        game_restart()
+        room_goto(m_highscore)
     }
 }
 

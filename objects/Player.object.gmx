@@ -3,7 +3,7 @@
   <spriteName>spr_player_idle</spriteName>
   <solid>0</solid>
   <visible>-1</visible>
-  <depth>0</depth>
+  <depth>-2</depth>
   <persistent>0</persistent>
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>spr_player_mask</maskName>
@@ -36,6 +36,13 @@ grav = 1.5
 
 state = move_state
 
+// get input
+get_input()
+
+
+// Create audio emitter
+audio_em = audio_emitter_create()
+
 
 </string>
           </argument>
@@ -60,7 +67,7 @@ state = move_state
           <argument>
             <kind>1</kind>
             <string>/// Control the player's state
-
+get_input()
 script_execute(state)
 </string>
           </argument>
@@ -101,9 +108,16 @@ if (above_enemy &amp;&amp; (falling || state == ledge_grab_state)) {
     with (other) {
         instance_destroy()
     }
-    vspd = (16 / 1.5)   
+    vspd = (16 / 1.5)
+    
+    // Play the sound
+    audio_play_sound(snd_step, 6, false)   
 } else {
     if (state != hurt_state) {
+        audio_emitter_pitch(audio_em, 1.6)
+        audio_emitter_gain(audio_em, 1.4)
+        audio_play_sound_on(audio_em, snd_ouch, false, 8)
+        
         image_blend = make_colour_rgb(220, 150, 150)
         vspd = -12
         hspd = sign(x - other.x) * 10
@@ -115,6 +129,36 @@ if (above_enemy &amp;&amp; (falling || state == ledge_grab_state)) {
     }
 }
     
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="Sapphire">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Collect the sapphire
+
+PlayerStats.sapphires += 1
+
+
+
+with (other) instance_destroy()
+audio_play_sound(snd_tink, 4, false)
 </string>
           </argument>
         </arguments>
@@ -138,10 +182,12 @@ if (above_enemy &amp;&amp; (falling || state == ledge_grab_state)) {
           <argument>
             <kind>1</kind>
             <string>/// Go to next level
-
-if (keyboard_check(vk_up))
+if (up) {
+    y = yprevious
     state = exit_state
-
+    audio_stop_sound(snd_jump)
+    audio_play_sound(snd_exit, 4, false)
+}
 </string>
           </argument>
         </arguments>
