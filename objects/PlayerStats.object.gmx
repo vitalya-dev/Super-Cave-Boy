@@ -70,7 +70,9 @@ if (start == true &amp;&amp; room = m_menu) {
 }
 
 // Collect time
-time += 1
+if (room != m_menu &amp;&amp; room != m_highscore) {
+    time += 1
+}   
 </string>
           </argument>
         </arguments>
@@ -142,6 +144,15 @@ switch (room) {
         draw_text_colour(room_width/2, room_height-48, str, c_ltgray, c_ltgray, c_ltgray, c_ltgray, 1)
         
         break
+    case m_highscore:
+        draw_set_halign(fa_center)
+        draw_text_colour(view_wview[0]/2, 64, "Your time was: " + string(floor(time/room_speed)), 
+                         c_white, c_white, c_white, c_white, 1)
+        draw_text_colour(view_wview[0]/2, 96, "Your score was: " + string(score), 
+                         c_white, c_white, c_white, c_white, 1)
+        draw_text_colour(view_wview[0]/2, 128, "The Highscore is: " + string(highscore), 
+                         c_white, c_white, c_white, c_white, 1)
+        
     default:
         // Draw the heart spaces
         for (var i = 0; i &lt; maxhp; i++) {
@@ -168,6 +179,31 @@ switch (room) {
         
         break
 }
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="27">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Exit game
+
+game_end()
 </string>
           </argument>
         </arguments>

@@ -12,4 +12,10 @@ if (!place_meeting(x, y+1, Solid)) {
     apply_friction(acc)
 }
 
-direction_move_bounce(Solid)  
+direction_move_bounce(Solid)
+
+if (PlayerStats.hp <= 0) {
+    PlayerStats.score = 0
+    PlayerStats.hp = PlayerStats.maxhp
+    room_restart()
+}  
